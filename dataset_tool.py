@@ -754,11 +754,11 @@ def create_landscapes(tfrecord_dir, image_dir, shuffle, resolution=512):
 
     labels = []
     labels_dict = {}
-    labels_list = pickle.load(open("landscapes/labels.p", "rb"))
+    labels_list = pickle.load(open("labels.p", "rb"))
     for label in labels_list:
         labels_dict[label[0]] = label[1]
 
-    image_filenames = [x.rsplit("\\")[-1] for x in image_filenames]
+    image_filenames = [x.rsplit("/")[-1] for x in image_filenames]
     print(image_filenames[0])
 
     with TFRecordExporter(tfrecord_dir, len(image_filenames)) as tfr:
