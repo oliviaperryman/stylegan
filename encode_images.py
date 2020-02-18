@@ -114,8 +114,10 @@ def main():
     tflib.init_tf()
     # with dnnlib.util.open_url(args.model_url, cache_dir=config.cache_dir) as f:
     #     generator_network, discriminator_network, Gs_network = pickle.load(f)
-    #model_path = "./results/vm/network-snapshot-002364.pkl"
-    model_path = "./results/other/network-snapshot-008040.pkl"
+    # model_path = "./results/vm/network-snapshot-002364.pkl"
+    # model_path = "./results/other/network-snapshot-008040.pkl"
+    # model_path = "./results/vm/cifar10/network-snapshot-010372.pkl" 
+    model_path = "./results/vm/landscapes/network-snapshot-006126.pkl" 
     with open(model_path, "rb") as f:
         generator_network, discriminator_network, Gs_network = pickle.load(f)
 
