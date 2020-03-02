@@ -51,7 +51,7 @@ if 1:
     #desc += '-4gpu'; submit_config.num_gpus = 4; sched.minibatch_base = 16; sched.minibatch_dict = {4: 512, 8: 256, 16: 128, 32: 64, 64: 32, 128: 16}
     #desc += '-8gpu'; submit_config.num_gpus = 8; sched.minibatch_base = 32; sched.minibatch_dict = {4: 512, 8: 256, 16: 128, 32: 64, 64: 32}
 
-    desc += '-cond'; dataset.max_label_size = 'full' # conditioned on full label 
+#    desc += '-cond'; dataset.max_label_size = 'full' # conditioned on full label 
 
     # Default options.
     train.total_kimg = 25000
