@@ -38,7 +38,7 @@ def main():
     parser.add_argument('--load_last', default='', help='Start with embeddings from directory')
     parser.add_argument('--dlatent_avg', default='', help='Use dlatent from file specified here for truncation instead of dlatent_avg from Gs')
     parser.add_argument('--model_url', default='https://drive.google.com/uc?id=1MEGjdvVpUsu1jB4zrXZN7Y4kBBOzizDQ', help='Fetch a StyleGAN model to train on from this URL') # karras2019stylegan-ffhq-1024x1024.pkl
-    parser.add_argument('--model_res', default=1024, help='The dimension of images in the StyleGAN model', type=int)
+    parser.add_argument('--model_res', default=512, help='The dimension of images in the StyleGAN model', type=int)
     parser.add_argument('--batch_size', default=1, help='Batch size for generator and perceptual model', type=int)
     parser.add_argument('--optimizer', default='ggt', help='Optimization algorithm used for optimizing dlatents')
 
@@ -117,7 +117,8 @@ def main():
     # model_path = "./results/vm/network-snapshot-002364.pkl"
     # model_path = "./results/other/network-snapshot-008040.pkl"
     # model_path = "./results/vm/cifar10/network-snapshot-010372.pkl" 
-    model_path = "./results/vm/landscapes/network-snapshot-006126.pkl" 
+    # model_path = "./results/vm/landscapes/network-snapshot-006126.pkl"
+    model_path = "./results/vm/landscapes-no-cond/network-snapshot-006126.pkl" 
     with open(model_path, "rb") as f:
         generator_network, discriminator_network, Gs_network = pickle.load(f)
 
