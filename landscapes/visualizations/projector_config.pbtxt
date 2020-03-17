@@ -1,0 +1,8 @@
+embeddings {
+  tensor_path: "latents.tsv"
+  sprite {
+    image_path: "sprite2.jpg"
+    single_image_dim: 100
+    single_image_dim: 100
+  }
+}
