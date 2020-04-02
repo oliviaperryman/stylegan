@@ -140,6 +140,54 @@ def run_experiment2():
         results.append(result)
     return results
 
+def run_random_direction():
+    random_direction = rnd.randn(16,512)
+    
+    results = []
+    qlatents = rnd.randn(10, Gs.input_shape[1])
+    dlatents = Gs.components.mapping.run(qlatents, None)
+
+    new_latent = dlatents[0]
+
+    new_latents = [new_latent]
+    for i in range(1,10):
+        new_latent = add_direction(
+            random_direction, i, dlatents[0])
+        new_latents.append(new_latent)
+
+    plt.figure(1, figsize=(30, 3))
+    for i, dlatent in enumerate(new_latents):
+        plt.subplot(1, 10, i+1)
+        im = generate_image(dlatent)
+        plt.imshow(im)
+        plt.axis('off')
+    # plt.savefig(exp_dir+filename[:-2]+".png")
+    plt.show()
+
+
+def run_random_direction_q():
+    random_direction = rnd.randn(512)
+    
+    qlatents = rnd.randn(1, Gs.input_shape[1])
+
+    new_latent = qlatents[0]
+
+    new_latents = [new_latent]
+    for i in range(1,10):
+        new_latent = qlatents[0] + i * random_direction
+        new_latents.append(new_latent)
+
+    dlatents = Gs.components.mapping.run(np.array(new_latents), None)
+
+    plt.figure(1, figsize=(30, 3))
+    for i, dlatent in enumerate(dlatents):
+        plt.subplot(1, 10, i+1)
+        im = generate_image(dlatent)
+        plt.imshow(im)
+        plt.axis('off')
+    # plt.savefig(exp_dir+filename[:-2]+".png")
+    plt.show()
+
 def run_test(filename, show_both=True):
     exp_dir = dir+'experiments/'
 
@@ -276,16 +324,18 @@ def fix_results(filename):
 
 
 def main():
-    filename = "olivia/results" + str(num) + ".p"
+    # filename = "olivia/results" + str(num) + ".p"
     # filename = "results-show_one.p"
     # run_test(filename, show_both=False)
     # view_imgs(filename)
     # view_results(filename)
     # view_avg_results()
 
-    run_test2(filename)
-    view_imgs(filename)
-    view_results2(filename)
+    # run_test2(filename)
+    # view_imgs(filename)
+    # view_results2(filename)
+    for _ in range(3):
+        run_random_direction_q()
 
 
 if __name__ == "__main__":
