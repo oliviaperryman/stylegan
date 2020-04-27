@@ -5,10 +5,7 @@
   - all images after preprocessing
 - landscapes/train
   - all wikiart images with no processing
-- 
 
-## Model Files
-- 
 
 ## Code files
 

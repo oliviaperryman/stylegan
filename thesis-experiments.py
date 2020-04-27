@@ -20,14 +20,15 @@ num = 102
 rnd = np.random.RandomState(num)
 
 # Initialize TensorFlow
-tflib.init_tf()
-_G, _D, Gs = pickle.load(open(os.path.join(dir, fn), 'rb'))
+if 0:
+    tflib.init_tf()
+    _G, _D, Gs = pickle.load(open(os.path.join(dir, fn), 'rb'))
 
-directions = ['water', 'grass', 'outdoor', 'field', 'beach', 'lake', 'ocean', 'painting', 'river', 'tree',
-              'nature', 'night', 'sunset', 'wave', 'blue', 'mountain', 'clouds', 'hill']
+    directions = ['water', 'grass', 'outdoor', 'field', 'beach', 'lake', 'ocean', 'painting', 'river', 'tree',
+                  'nature', 'night', 'sunset', 'wave', 'blue', 'mountain', 'clouds', 'hill']
 
-direction_vectors = {x: pickle.load(
-    open(dir + 'generated_imgs1000/directions/'+x+'.p', 'rb')) for x in directions}
+    direction_vectors = {x: pickle.load(
+        open(dir + 'generated_imgs1000/directions/'+x+'.p', 'rb')) for x in directions}
 
 
 def generate_image(latent_vector):
@@ -109,7 +110,7 @@ def run_experiment2_novelty(filename):
 
     for i in range(10):
         new_latent = (qlatents[i] * coeffs[i] +
-                      qlatents2[i] * (9-coeffs[i])) / 2
+                      qlatents2[i] * (9-coeffs[i])) / 9
 
         latents = []
         latents.append(qlatents[i])
@@ -194,6 +195,32 @@ def run_experiment3_novelty(filename):
 def view_novelty_results(filename, exp_num):
     exp_dir = 'experiments/experiment'+str(exp_num)+'/novelty/'
     results = pickle.load(open(exp_dir+filename, 'rb'))
+
+    # Sort in order of distance
+    results = sorted(results, key=(lambda x: x.distance), reverse=False)
+
+    x = [int(r.distance) for r in results]
+    y_novelty_agreement = [int(r.novel_agreement) for r in results]
+
+    plt.scatter(x, y_novelty_agreement)
+    plt.title("Experiment " + str(exp_num))
+    plt.xlabel('Distance from original image')
+    plt.ylabel('Agreement with novelty')
+    # line of best fit
+    plt.plot(np.unique(x), np.poly1d(np.polyfit(
+        x, y_novelty_agreement, 1))(np.unique(x)))
+    plt.show()
+
+
+def view_novelty_results_summary(filename, exp_num):
+    exp_dir = 'experiments/experiment'+str(exp_num)+'/novelty/'
+
+    filenames = os.listdir(exp_dir)
+
+    results = []
+    for fn in filenames:
+        rs = pickle.load(open(exp_dir+fn, 'rb'))
+        results.extend(rs)
 
     # Sort in order of distance
     results = sorted(results, key=(lambda x: x.distance), reverse=False)
@@ -507,7 +534,7 @@ def view_quality_results_bar_summary(exp_num, label_names):
         elif(r.order == 0 and r.landscape == '2'):
             orig_img_is_more[r.coeff] += 1
 
-    ax = plt.subplot(111)
+    ax = plt.subplot(211)
     red = ax.bar(np.array(x)-0.2, orig_img_is_more,
                  width=0.2, color='r', align='center')
     blue = ax.bar(x, none_more, width=0.2, color='b', align='center')
@@ -516,8 +543,12 @@ def view_quality_results_bar_summary(exp_num, label_names):
     plt.xlabel('Coefficient')
     plt.ylabel('Number of times chosen')
     plt.title('Landscape resemblance compared side by side')
+    plt.subplot(212)
+    plt.axis('off')
+    plt.tight_layout()
     plt.legend([green, red, blue],  ["The moved image more resembles a landscape.",
-                                     "The original image more resembles a landscape.", "Neither image more resembles a landscape."])
+                                     "The original image more resembles a landscape.", "Neither image more resembles a landscape."],
+               )
     plt.show()
 
     for label in label_names:
@@ -541,7 +572,7 @@ def view_quality_results_bar_summary(exp_num, label_names):
             elif(r.order == 0 and r.landscape == '2'):
                 orig_img_is_more[r.coeff] += 1
 
-        ax = plt.subplot(111)
+        ax = plt.subplot(211)
         red = ax.bar(np.array(x)-0.2, orig_img_is_more,
                      width=0.2, color='r', align='center')
         blue = ax.bar(x, none_more, width=0.2, color='b', align='center')
@@ -550,6 +581,9 @@ def view_quality_results_bar_summary(exp_num, label_names):
         plt.xlabel('Coefficient')
         plt.ylabel('Number of times chosen')
         plt.title(label + ' resemblance compared side by side')
+        plt.subplot(212)
+        plt.axis('off')
+        plt.tight_layout()
         plt.legend([green, red, blue],  ["The moved image more resembles a " + label,
                                          "The original image more resembles a " + label, "Neither image more resembles a " + label])
         plt.show()
@@ -559,24 +593,24 @@ def main():
     filename = "olivia" + str(num) + ".p"
 
     # run_experiment1_novelty(filename)
-    # view_novelty_results(filename, 1)
+    # view_novelty_results_summary(filename, 1)
     # run_experiment2_novelty(filename)
-    # view_novelty_results(filename, 2)
+    # view_novelty_results_summary(filename, 2)
     # run_experiment3_novelty(filename)
-    # view_novelty_results(filename, 3)
+    # view_novelty_results_summary(filename, 3)
 
     # run_experiment1_quality(filename)
     # view_quality_results_bar(filename, 1, [])
-    # view_quality_results_bar_summary(1, [])
+    view_quality_results_bar_summary(1, [])
 
-    run_experiment2_quality(filename)
-    view_quality_results_bar(filename, 2, [])
+    # run_experiment2_quality(filename)
+    # view_quality_results_bar(filename, 2, [])
     view_quality_results_bar_summary(2, [])
 
     # run_experiment3_quality(filename)
     # view_quality_results(filename, 3, ['tree', 'ocean'])
     # view_quality_results_bar(filename, 3, ['tree', 'ocean'])
-    # view_quality_results_bar_summary(3, ['tree', 'ocean'])
+    view_quality_results_bar_summary(3, ['tree', 'ocean'])
 
 
 class Result:
