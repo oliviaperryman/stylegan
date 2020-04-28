@@ -101,6 +101,10 @@ def main():
     ref_images = [os.path.join(args.src_dir, x) for x in os.listdir(args.src_dir)]
     ref_images = list(filter(os.path.isfile, ref_images))
 
+    existing_images = [os.path.join(args.src_dir, x)[:-4]+".jpg" for x in os.listdir(args.generated_images_dir)]
+
+    ref_images = list( set(ref_images) - set(existing_images) )
+
     if len(ref_images) == 0:
         raise Exception('%s is empty' % args.src_dir)
 
